@@ -6,11 +6,16 @@
 /*   By: ecousill <ecousill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:06:37 by ecousill          #+#    #+#             */
-/*   Updated: 2024/12/13 16:22:23 by ecousill         ###   ########.fr       */
+/*   Updated: 2024/12/13 16:24:16 by ecousill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
+
+long	print_timestamp(void)
+{
+	// imprime la diferencia de tiempo entre cuando se ejecutó el programa y cuando se llama esta función
+}
 
 long	get_timestamp(void)
 {
