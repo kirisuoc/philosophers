@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecousill <ecousill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: erikcousillas <erikcousillas@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:06:37 by ecousill          #+#    #+#             */
-/*   Updated: 2024/12/13 15:46:55 by ecousill         ###   ########.fr       */
+/*   Updated: 2024/12/14 12:05:36 by erikcousill      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,20 +55,107 @@ pthread_mutex_lock: Bloquea un mutex.
 pthread_mutex_unlock: Desbloquea un mutex.
 */
 
-void	*mi_funcion(void *arg)
+
+
+/* void	*print_hilo(void *arg)
 {
-	printf("Hilo en ejecución\n");
-	return (NULL);
+	int	id = *(int *)arg;	// Convertimos el argumento de puntero a void a puntero a int
+
+	printf("¡Hola desde el hilo %d\n", id);
+	return NULL;
+} */
+/* void	*print_hilo(void *arg)
+{
+	int			counter;	// Convertimos el argumento de puntero a void a puntero a int
+
+	counter = *(int *)arg;
+
+	printf("¡Hola desde el hilo %d\n", counter++);
+	return NULL;
+} */
+
+typedef struct
+{
+	int	*counter;			// Puntero al contador compartido
+	pthread_mutex_t	*mutex;	// Puntero al mutex
+}		hilo_args_t;
+
+
+void *print_hilo(void *arg) {
+	hilo_args_t *args = (hilo_args_t *)arg;
+
+	pthread_mutex_lock(args->mutex); // Bloquear el mutex
+	(*(args->counter))++;
+	printf("¡Hola desde el hilo %d!\n", *(args->counter));
+	pthread_mutex_unlock(args->mutex); // Liberar el mutex
+
+	return NULL;
 }
 
 int	main(void)
 {
-	pthread_t hilo;
+	const int			NUM_HILOS = 5;
+	pthread_t			hilos[NUM_HILOS];
+	int					counter;
+	pthread_mutex_t		mutex = PTHREAD_MUTEX_INITIALIZER;
+	hilo_args_t args = { &counter, &mutex }; // Argumentos para los hilos
 
-	pthread_create(&hilo, NULL, mi_funcion, NULL);
+	counter = 0;
 
-	// pthread_join(hilo, NULL); // Espera que el hilo termine
+	for (int i = 0; i < NUM_HILOS; i++)
+	{
+		if (pthread_create(&hilos[i], NULL, print_hilo, &args) != 0)
+		{
+			perror("Error al crear el hilo.");
+			return (1);
+		}
+	}
 
-	pthread_detach(hilo); // Se separa el hilo y no se necesita hacer pthread_join
+	// Esperar a que los hilos terminen
+	for (int i = 0; i < NUM_HILOS; i++)
+	{
+		if (pthread_join(hilos[i], NULL) != 0) // Espera que el hilo termine
+		{
+			perror("Error al unir el hilo.");
+			return (1);
+		}
+	}
+
+	pthread_mutex_destroy(&mutex); // Destruir el mutex
+
+	// pthread_detach(hilo); // Se separa el hilo y no se necesita hacer pthread_join
 	return (0);
+}
+
+
+			// OTRO EJEMPLO
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; // Inicializamos el mutex
+
+int counter = 0; // Recurso compartido
+
+void *increment_counter(void *arg) {
+	for (int i = 0; i < 10000; i++) {
+		pthread_mutex_lock(&mutex);    // Bloquea el mutex
+		counter++;                    // Sección crítica
+		pthread_mutex_unlock(&mutex); // Libera el mutex
+	}
+	return NULL;
+}
+
+int main(void) {
+	pthread_t hilo1, hilo2;
+
+	// Crear hilos
+	pthread_create(&hilo1, NULL, increment_counter, NULL);
+	pthread_create(&hilo2, NULL, increment_counter, NULL);
+
+	// Esperar a que los hilos terminen
+	pthread_join(hilo1, NULL);
+	pthread_join(hilo2, NULL);
+
+	printf("Valor final del contador: %d\n", counter);
+
+	pthread_mutex_destroy(&mutex); // Destruir el mutex
+	return 0;
 }
