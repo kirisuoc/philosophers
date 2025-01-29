@@ -6,7 +6,7 @@
 /*   By: ecousill <ecousill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:54:48 by ecousill          #+#    #+#             */
-/*   Updated: 2025/01/28 15:58:39 by ecousill         ###   ########.fr       */
+/*   Updated: 2025/01/29 11:43:23 by ecousill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,11 @@ long get_elapsed_ms(struct timeval start_time)
 	gettimeofday(&current_time, NULL);
 	long elapsed_ms = (current_time.tv_sec - start_time.tv_sec) * 1000 + (current_time.tv_usec - start_time.tv_usec) / 1000;
 	return elapsed_ms;
+}
+
+long get_time_in_ms(void)
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 }
