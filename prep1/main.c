@@ -6,7 +6,7 @@
 /*   By: ecousill <ecousill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:17:54 by ecousill          #+#    #+#             */
-/*   Updated: 2025/01/29 16:30:30 by ecousill         ###   ########.fr       */
+/*   Updated: 2025/01/29 16:32:31 by ecousill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,11 +123,7 @@ void	*filosofo(void *arg)
 int	main(int ac, char **av)
 {
 	struct timeval	start_time;
-	int				number_of_philosophers = ft_atoi(av[1]);
-	int				time_to_die = ft_atoi(av[2]);
-	int				time_to_eat = ft_atoi(av[3]);
-	int				time_to_sleep = ft_atoi(av[4]);
-	int				times_each_philo_must_eat =  -1;
+	int				times_each_philo_must_eat;
 	pthread_t		filosofos[number_of_philosophers];
 	pthread_mutex_t	tenedores[number_of_philosophers];
 	t_philo_data	philo_data[number_of_philosophers];
@@ -139,6 +135,7 @@ int	main(int ac, char **av)
 		printf("Uso: %s number_of_philosophers time_to_die time_to_eat time_to_sleep [times_each_philo_must_eat]\n", av[0]);
 		return (1);
 	}
+	times_each_philo_must_eat = -1;
 	if (ac == 6)
 		times_each_philo_must_eat = ft_atoi(av[5]);
 	if (number_of_philosophers <= 0 || time_to_die <= 0 || time_to_eat <= 0 || time_to_sleep <= 0 \
@@ -147,8 +144,6 @@ int	main(int ac, char **av)
 		printf("Error. Todos los argumentos deben ser positivos.\n");
 		return (1);
 	}
-
-
 
 	i = 0;
 	// Inicializar los mutex (tenedores)
@@ -160,10 +155,10 @@ int	main(int ac, char **av)
 	while (i < number_of_philosophers)
 	{
 		philo_data[i].id = i + 1;
-		philo_data[i].number_of_philosophers = number_of_philosophers;
-		philo_data[i].time_to_eat = time_to_eat;
-		philo_data[i].time_to_sleep = time_to_sleep;
-		philo_data[i].time_to_die = time_to_die;
+		philo_data[i].number_of_philosophers = ft_atoi(av[1]);
+		philo_data[i].time_to_die = ft_atoi(av[2]);
+		philo_data[i].time_to_eat = ft_atoi(av[3]);
+		philo_data[i].time_to_sleep = ft_atoi(av[4]);
 		philo_data[i].tenedores = tenedores;
 		philo_data[i].times_each_philo_must_eat = times_each_philo_must_eat;
 		philo_data[i].start_time = start_time;	// Momento del inicio del programa
