@@ -6,7 +6,7 @@
 /*   By: ecousill <ecousill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:17:50 by ecousill          #+#    #+#             */
-/*   Updated: 2025/01/29 11:43:31 by ecousill         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:25:26 by ecousill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef struct s_philo_data
 	int				time_to_die;	// Tiempo para morir sin comer
 	int				time_to_eat;	// Tiempo para comer
 	int				time_to_sleep;	// Tiempo para dormir
-	int				number_of_times_each_philosopher_must_eat;
+	int				times_each_philo_must_eat;
 	pthread_mutex_t	*tenedores;	// Puntero al array de mutex de los tenedores
 	pthread_mutex_t	meal_mutex;	// Mutex para proteger meal_counter
 }				t_philo_data;
