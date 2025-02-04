@@ -6,7 +6,7 @@
 /*   By: ecousill <ecousill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:17:54 by ecousill          #+#    #+#             */
-/*   Updated: 2025/01/29 16:32:31 by ecousill         ###   ########.fr       */
+/*   Updated: 2025/02/04 18:36:05 by ecousill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,51 @@ void	*filosofo(void *arg)
 	return (NULL);
 }
 
+int	check_errors(int ac, char **av, t_philo_data *philo_data)
+{
+	if (ac < 5 || ac > 6)
+	{
+		printf("Uso: %s number_of_philosophers time_to_die time_to_eat \
+			time_to_sleep [times_each_philo_must_eat]\n", av[0]);
+		return (1);
+	}
+	if (ac == 6)
+		philo_data.times_each_philo_must_eat = ft_atoi(av[5]);
+
+
+}
+
+void	inizialize_data(char **av, t_philo_data *philo_data)
+{
+	int	number_of_philosophers;
+
+	number_of_philosophers = ft_atoi(av[1]);
+
+
+	// Crear los hilos (filósofos)
+	while (i < number_of_philosophers)
+	{
+		philo_data[i].id = i + 1;
+		philo_data[i].number_of_philosophers = ft_atoi(av[1]);
+		philo_data[i].time_to_die = ft_atoi(av[2]);
+		philo_data[i].time_to_eat = ft_atoi(av[3]);
+		philo_data[i].time_to_sleep = ft_atoi(av[4]);
+		philo_data[i].tenedores = tenedores;
+		philo_data[i].start_time = start_time;	// Momento del inicio del programa
+		philo_data[i].meal_counter = 0;
+		philo_data[i].last_meal_time = get_time_in_ms();
+		philo_data[i].times_each_philo_must_eat = -1;
+		if (ac == 6)
+			philo_data[i].times_each_philo_must_eat = ft_atoi(av[5]);
+
+		pthread_mutex_init(&philo_data[i].meal_mutex, NULL);
+
+		pthread_create(&filosofos[i], NULL, filosofo, &philo_data[i]);
+		i++;
+	}
+
+}
+
 int	main(int ac, char **av)
 {
 	struct timeval	start_time;
@@ -130,14 +175,15 @@ int	main(int ac, char **av)
 	int				i;
 
 	gettimeofday(&start_time, NULL);
-	if (ac < 5 || ac > 6)
+/* 	if (ac < 5 || ac > 6)
 	{
-		printf("Uso: %s number_of_philosophers time_to_die time_to_eat time_to_sleep [times_each_philo_must_eat]\n", av[0]);
+		printf("Uso: %s number_of_philosophers time_to_die time_to_eat \
+			time_to_sleep [times_each_philo_must_eat]\n", av[0]);
 		return (1);
-	}
-	times_each_philo_must_eat = -1;
+	} */
+/* 	times_each_philo_must_eat = -1;
 	if (ac == 6)
-		times_each_philo_must_eat = ft_atoi(av[5]);
+		times_each_philo_must_eat = ft_atoi(av[5]); */
 	if (number_of_philosophers <= 0 || time_to_die <= 0 || time_to_eat <= 0 || time_to_sleep <= 0 \
 		|| (ac == 6 && times_each_philo_must_eat <= 0))
 	{
@@ -150,7 +196,7 @@ int	main(int ac, char **av)
 	while (i < number_of_philosophers)
 		pthread_mutex_init(&tenedores[i++], NULL);
 
-	i = 0;
+/* 	i = 0;
 	// Crear los hilos (filósofos)
 	while (i < number_of_philosophers)
 	{
@@ -168,7 +214,7 @@ int	main(int ac, char **av)
 
 		pthread_create(&filosofos[i], NULL, filosofo, &philo_data[i]);
 		i++;
-	}
+	} */
 
 	// Crear hilos de monitorización
 	pthread_t	monitor_filosofos_thread;
