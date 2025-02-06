@@ -6,7 +6,7 @@
 /*   By: ecousill <ecousill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:17:54 by ecousill          #+#    #+#             */
-/*   Updated: 2025/02/04 18:36:05 by ecousill         ###   ########.fr       */
+/*   Updated: 2025/02/06 14:32:24 by ecousill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,10 @@ void	*filosofo(void *arg)
 		data->last_meal_time = get_elapsed_ms(data->start_time);
 		data->meal_counter++;
 		pthread_mutex_unlock(&data->meal_mutex);
+
 		printf("[%ld] %d has eaten %d times. -- Quitar\n", \
 			get_elapsed_ms(data->start_time), id, data->meal_counter);
+
 		usleep(data->time_to_eat * 1000);
 		pthread_mutex_unlock(&data->tenedores[tenedor_der]);
 		pthread_mutex_unlock(&data->tenedores[tenedor_izq]);
@@ -131,14 +133,30 @@ int	check_errors(int ac, char **av, t_philo_data *philo_data)
 	if (ac == 6)
 		philo_data.times_each_philo_must_eat = ft_atoi(av[5]);
 
+	if (number_of_philosophers <= 0 || time_to_die <= 0 || time_to_eat <= 0 || time_to_sleep <= 0 \
+		|| (ac == 6 && times_each_philo_must_eat <= 0))
+	{
+		printf("Error. Todos los argumentos deben ser positivos.\n");
+		return (1);
+	}
 
 }
 
 void	inizialize_data(char **av, t_philo_data *philo_data)
 {
 	int	number_of_philosophers;
+	int	time_to_die;
+	int	time_to_eat;
+	int	time_to_sleep;
+	int	times_each_philo_must_eat;
 
 	number_of_philosophers = ft_atoi(av[1]);
+	time_to_die = ft_atoi(av[2]);
+	time_to_eat = ft_atoi(av[3]);
+	time_to_sleep = ft_atoi(av[4]);
+	times_each_philo_must_eat = -1;
+	if (ac == 6)
+		times_each_philo_must_eat = ft_atoi(av[5]);
 
 
 	// Crear los hilos (filósofos)
@@ -153,9 +171,8 @@ void	inizialize_data(char **av, t_philo_data *philo_data)
 		philo_data[i].start_time = start_time;	// Momento del inicio del programa
 		philo_data[i].meal_counter = 0;
 		philo_data[i].last_meal_time = get_time_in_ms();
-		philo_data[i].times_each_philo_must_eat = -1;
-		if (ac == 6)
-			philo_data[i].times_each_philo_must_eat = ft_atoi(av[5]);
+		philo_data[i].times_each_philo_must_eat = times_each_philo_must_eat;
+
 
 		pthread_mutex_init(&philo_data[i].meal_mutex, NULL);
 
@@ -163,6 +180,33 @@ void	inizialize_data(char **av, t_philo_data *philo_data)
 		i++;
 	}
 
+}
+
+void	create_threads(char **av, t_philo_data *philo_data, int	number_of_philosophers)
+{
+	int	i;
+
+	i = 0;
+	// Crear los hilos (filósofos)
+	while (i < number_of_philosophers)
+	{
+		philo_data[i].id = i + 1;
+		philo_data[i].number_of_philosophers = number_of_philosophers;
+		philo_data[i].time_to_die = ft_atoi(av[2]);
+		philo_data[i].time_to_eat = ft_atoi(av[3]);
+		philo_data[i].time_to_sleep = ft_atoi(av[4]);
+		philo_data[i].tenedores = tenedores;
+		philo_data[i].start_time = start_time;	// Momento del inicio del programa
+		philo_data[i].meal_counter = 0;
+		philo_data[i].last_meal_time = get_time_in_ms();
+		philo_data[i].times_each_philo_must_eat = times_each_philo_must_eat;
+
+
+		pthread_mutex_init(&philo_data[i].meal_mutex, NULL);
+
+		pthread_create(&filosofos[i], NULL, filosofo, &philo_data[i]);
+		i++;
+	}
 }
 
 int	main(int ac, char **av)
@@ -184,18 +228,19 @@ int	main(int ac, char **av)
 /* 	times_each_philo_must_eat = -1;
 	if (ac == 6)
 		times_each_philo_must_eat = ft_atoi(av[5]); */
-	if (number_of_philosophers <= 0 || time_to_die <= 0 || time_to_eat <= 0 || time_to_sleep <= 0 \
+	/* if (number_of_philosophers <= 0 || time_to_die <= 0 || time_to_eat <= 0 || time_to_sleep <= 0 \
 		|| (ac == 6 && times_each_philo_must_eat <= 0))
 	{
 		printf("Error. Todos los argumentos deben ser positivos.\n");
 		return (1);
-	}
+	} */
 
 	i = 0;
 	// Inicializar los mutex (tenedores)
 	while (i < number_of_philosophers)
 		pthread_mutex_init(&tenedores[i++], NULL);
 
+	create_threads(&av, &philo_data, &tenedores, &start_time);
 /* 	i = 0;
 	// Crear los hilos (filósofos)
 	while (i < number_of_philosophers)
