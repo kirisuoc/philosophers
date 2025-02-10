@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   monitor.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecousill <ecousill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: erikcousillas <erikcousillas@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 10:56:29 by ecousill          #+#    #+#             */
-/*   Updated: 2025/02/06 11:20:29 by ecousill         ###   ########.fr       */
+/*   Updated: 2025/02/10 11:56:35 by erikcousill      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	*monitor_meals(void *arg)
 		if (all_fed)
 		{
 			printf("[%ld] Every philosopher has eaten enough.\n", \
-				get_elapsed_ms(philos[0].start_time));
+				get_elapsed_ms(&philos[0].start_time));
 			exit(0);
 		}
 		usleep(10000);
@@ -54,7 +54,7 @@ void	*monitor_philosophers(void *arg)
 		while (i < philos[0].number_of_philosophers)
 		{
 			pthread_mutex_lock(&philos[i].meal_mutex);
-			now = get_elapsed_ms(philos[i].start_time)
+			now = get_elapsed_ms(&philos[i].start_time);
 			if (philos[i].meal_counter < philos[i].times_each_philo_must_eat)
 			{
 				if (now - philos[i].last_meal_time > philos[i].time_to_die)
@@ -65,7 +65,7 @@ void	*monitor_philosophers(void *arg)
 			}
 			pthread_mutex_unlock(&philos[i++].meal_mutex);
 		}
-		usleep(10000);
+		usleep(1000);
 	}
 	return (NULL);
 }

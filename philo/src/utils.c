@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecousill <ecousill@student.42.fr>          +#+  +:+       +#+        */
+/*   By: erikcousillas <erikcousillas@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:54:48 by ecousill          #+#    #+#             */
-/*   Updated: 2025/02/06 13:54:45 by ecousill         ###   ########.fr       */
+/*   Updated: 2025/02/08 16:36:35 by erikcousill      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ int	ft_atoi(const char *nptr)
 	return (number * sign);
 }
 
-long	get_elapsed_ms(struct timeval start_time)
+long	get_elapsed_ms(struct timeval *start_time)
 {
 	struct timeval	current_time;
 	long			elapsed_ms;
 
-	elapsed_ms = (current_time.tv_sec - start_time.tv_sec) \
-		* 1000 + (current_time.tv_usec - start_time.tv_usec) / 1000;
 	gettimeofday(&current_time, NULL);
+	elapsed_ms = (current_time.tv_sec - start_time->tv_sec) \
+		* 1000 + (current_time.tv_usec - start_time->tv_usec) / 1000;
 	return (elapsed_ms);
 }
 
