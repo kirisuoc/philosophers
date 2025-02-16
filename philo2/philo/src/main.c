@@ -6,7 +6,7 @@
 /*   By: ecousill <ecousill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:06:37 by ecousill          #+#    #+#             */
-/*   Updated: 2025/02/16 09:22:16 by ecousill         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:08:31 by ecousill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,11 @@ int	allocate_resources(t_simulation *sim)
 	if (!sim->philosophers || !sim->tenedores || !sim->philo_data)
 	{
 		printf("Error trying to allocate memory.\n");
-		if (sim->philo_data)
-			free(sim->philo_data);
-		if (sim->philosophers)
-			free(sim->philosophers);
-		if (sim->tenedores)
-			free(sim->tenedores);
+		free(sim->philosophers);
+		free(sim->tenedores);
+		free(sim->philo_data);
 		return (1);
 	}
-	pthread_mutex_init(&sim->shared.simulation_mutex, NULL);
-	sim->shared.simulation_ended = 0;
 	return (0);
 }
 
@@ -63,13 +58,6 @@ void	*philosopher(void *arg)
 	data = (t_philo_data *)arg;
 	while (1)
 	{
- 		pthread_mutex_lock(&data->shared->simulation_mutex);
-		if (data->shared->simulation_ended)
-		{
-			pthread_mutex_unlock(&data->shared->simulation_mutex);
-			return (NULL);
-		}
-		pthread_mutex_unlock(&data->shared->simulation_mutex);
 		take_forks_and_eat(data, data->id);
 		to_sleep_and_think(data, data->id);
 	}
@@ -83,9 +71,9 @@ int	main(int ac, char **av)
 
 	sim.ac = ac;
 	sim.av = av;
+	gettimeofday(&sim.start_time, NULL);
 	if (check_errors(ac, av))
 		return (1);
-	gettimeofday(&sim.start_time, NULL);
 	if (allocate_resources(&sim))
 		return (1);
 	i = 0;

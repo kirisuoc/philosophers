@@ -6,7 +6,7 @@
 /*   By: ecousill <ecousill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:17:50 by ecousill          #+#    #+#             */
-/*   Updated: 2025/02/16 09:12:23 by ecousill         ###   ########.fr       */
+/*   Updated: 2025/02/16 09:29:31 by ecousill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,6 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/time.h>
-
-typedef struct s_shared_data
-{
-	pthread_mutex_t	simulation_mutex;
-	int				simulation_ended;
-}				t_shared_data;
-
 
 typedef struct s_philo_data
 {
@@ -39,7 +32,6 @@ typedef struct s_philo_data
 	int				times_each_philo_must_eat;
 	pthread_mutex_t	*tenedores;	// Puntero al array de mutex de los tenedores
 	pthread_mutex_t	meal_mutex;	// Mutex para proteger meal_counter
-	t_shared_data	*shared;
 }				t_philo_data;
 
 typedef struct s_simulation
@@ -51,7 +43,6 @@ typedef struct s_simulation
 	struct timeval	start_time;
 	char			**av;
 	int				ac;
-	t_shared_data	shared;
 }				t_simulation;
 
 // main.c

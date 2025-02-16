@@ -6,7 +6,7 @@
 /*   By: ecousill <ecousill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:54:48 by ecousill          #+#    #+#             */
-/*   Updated: 2025/02/16 08:53:51 by ecousill         ###   ########.fr       */
+/*   Updated: 2025/02/11 12:06:49 by ecousill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,8 @@ void	print_status_change(struct timeval start_time, int id, int option)
 	else if (option == 4)
 		printf("[%ld] %d is thinking.\n", get_elapsed_ms(&start_time), id);
 	else if (option == 5)
+	{
 		printf("[%ld] %d died.\n", get_elapsed_ms(&start_time), id);
+		exit(0);
+	}
 }
