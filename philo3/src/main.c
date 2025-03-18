@@ -6,7 +6,7 @@
 /*   By: erikcousillas <erikcousillas@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 08:26:27 by erikcousill       #+#    #+#             */
-/*   Updated: 2025/02/17 09:17:33 by erikcousill      ###   ########.fr       */
+/*   Updated: 2025/02/18 04:04:33 by erikcousill      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,7 @@ int	main(int ac, char **av)
 	while (i < sim.number_of_philos)
 		pthread_mutex_init(&sim.tenedores[i++], NULL);
 	create_threads(&sim);
-	printf("Threads created\n");
-	//create_monitor_threads(&sim);
+	create_monitor_threads(&sim);
 
  	i = 0;
 	while (i < sim.number_of_philos)
